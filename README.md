@@ -1,6 +1,6 @@
-# ReplyKafka
+# ReplyKafkaTemplate Synchronous Spring boot
 
-start kafka :
+### Start Kafka  :
 ```
 docker-compose -f zk-single-kafka-single.yml up -d
 docker exec -it zookeeper-kafka_kafka1_1 sh
@@ -10,11 +10,15 @@ kafka-topics.sh --create --zookeeper zoo1:2181 --topic test-reply-topic-resp --p
 kafka-topics.sh --list  --zookeeper zoo1:2181
 ```
 
-Spring boot Application :
-* 2 Profile : auto, manaual
+----------
 
-* JVM ARGS ReplyKafkaReq
+
+### Spring boot Application :
+* have 2 profile : auto, manaual
+
+* JVM ARGS
+> ReplyKafkaReq
 ```
 -Dserver.port=9000 -Dspring.profiles.active=manaual -DSERVER_PORT=localhost:9093 -DCLIENT_ID=reply-kafka-req -DGROUPID_TOPIC_RESP=reply-kafka-req -DTOPIC_REQ=test-reply-topic-req -DTOPIC_RESP=test-reply-topic-resp
 ```
-* JVM ARGS ReplyKafkaResp
+> ReplyKafkaResp
