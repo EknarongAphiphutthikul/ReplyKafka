@@ -42,10 +42,10 @@ public abstract class KafkaConfigUtils {
 	}
 	
 	// reply kafka template
-	protected static ReplyingKafkaTemplate<String, String, String> cretaeReplyKafkaTemplate(ProducerFactory<String, String> producerFactory, ConcurrentMessageListenerContainer<String, String> replyContainer) throws Exception {
-		return cretaeReplyKafkaTemplate(producerFactory, replyContainer, false);
+	protected static ReplyingKafkaTemplate<String, String, String> replyKafkaTemplateForAutoConfig(ProducerFactory<String, String> producerFactory, ConcurrentMessageListenerContainer<String, String> replyContainer) throws Exception {
+		return replyKafkaTemplateForManaulConfig(producerFactory, replyContainer, false);
 	}
-	protected static ReplyingKafkaTemplate<String, String, String> cretaeReplyKafkaTemplate(ProducerFactory<String, String> producerFactory, ConcurrentMessageListenerContainer<String, String> replyContainer, boolean flagStart) throws Exception {
+	protected static ReplyingKafkaTemplate<String, String, String> replyKafkaTemplateForManaulConfig(ProducerFactory<String, String> producerFactory, ConcurrentMessageListenerContainer<String, String> replyContainer, boolean flagStart) throws Exception {
 		ReplyingKafkaTemplate<String, String, String> replyKafkaTemplate = new ReplyingKafkaTemplate<>(producerFactory, replyContainer);
 		replyKafkaTemplate.setSharedReplyTopic(true);
 		if (flagStart) {
@@ -55,10 +55,9 @@ public abstract class KafkaConfigUtils {
 	}
 	
 	// kafka template
-	protected static KafkaTemplate<String, String> cretaeKafkaTemplate(ProducerFactory<String, String> producerFactory) throws Exception {
+	protected static KafkaTemplate<String, String> kafkaTemplate(ProducerFactory<String, String> producerFactory) throws Exception {
 		return new KafkaTemplate<>(producerFactory);
 	}
-	
 	
 	
 	/*
@@ -103,6 +102,14 @@ public abstract class KafkaConfigUtils {
 	    if (null != concurrency) {
 	    	factory.setConcurrency(concurrency);
 	    }
+	    return factory;
+	}
+	protected static ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(ConsumerFactory<String, String> consumerFactory, KafkaTemplate<String, String> kafkaTemplate) throws Exception {
+	    ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+	    factory.setConsumerFactory(consumerFactory);
+	    factory.setReplyTemplate(kafkaTemplate);
+	    factory.setConcurrency(1);
+	    factory.setAutoStartup(true);
 	    return factory;
 	}
 	

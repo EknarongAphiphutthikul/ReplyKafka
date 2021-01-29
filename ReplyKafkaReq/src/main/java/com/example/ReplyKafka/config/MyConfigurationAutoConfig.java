@@ -17,13 +17,13 @@ import com.example.ReplyKafka.ReplyKafkaApplication;
 public class MyConfigurationAutoConfig extends KafkaConfigUtils {
 	
 	@Bean
-	public ConcurrentMessageListenerContainer<String, String> replyContainer(ConcurrentKafkaListenerContainerFactory<String, String> factory) throws Exception {
+	public ConcurrentMessageListenerContainer<String, String> initReplyContainer(ConcurrentKafkaListenerContainerFactory<String, String> factory) throws Exception {
 		return concurrentMessageListenerContainer(factory, ReplyKafkaApplication.topicResponse, ReplyKafkaApplication.groupIdTopicResp);
 	}
 
 	@Bean
-	public ReplyingKafkaTemplate<String, String, String> createReplyKafkaTemplate(ProducerFactory<String, String> producerFactory, ConcurrentMessageListenerContainer<String, String> replyContainer) throws Exception {
-		return cretaeReplyKafkaTemplate(producerFactory, replyContainer);
+	public ReplyingKafkaTemplate<String, String, String> initReplyKafkaTemplate(ProducerFactory<String, String> producerFactory, ConcurrentMessageListenerContainer<String, String> replyContainer) throws Exception {
+		return replyKafkaTemplateForAutoConfig(producerFactory, replyContainer);
 	}
 
 	@PostConstruct

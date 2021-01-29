@@ -18,12 +18,12 @@ import com.example.ReplyKafka.ReplyKafkaApplication;
 public class MyConfigurationManaualConfig extends KafkaConfigUtils {
 
 	@Bean
-	public ReplyingKafkaTemplate<String, String, String> createReplyKafkaTemplate() throws Exception {
+	public ReplyingKafkaTemplate<String, String, String> initReplyKafkaTemplate() throws Exception {
 		ProducerFactory<String, String> producerFactory = producerFactory(ReplyKafkaApplication.serverPostKafka, ReplyKafkaApplication.clientId);
 		ConsumerFactory<String, String> consumerFactory = consumerFactory(ReplyKafkaApplication.serverPostKafka, ReplyKafkaApplication.groupIdTopicResp, ReplyKafkaApplication.clientId, 5, false, true);
 		ConcurrentKafkaListenerContainerFactory<String, String> factory = kafkaListenerContainerFactory(consumerFactory, 1);
 		ConcurrentMessageListenerContainer<String, String> replyContainer = concurrentMessageListenerContainer(factory, ReplyKafkaApplication.topicResponse, ReplyKafkaApplication.groupIdTopicResp);
-		return cretaeReplyKafkaTemplate(producerFactory, replyContainer, true);
+		return replyKafkaTemplateForManaulConfig(producerFactory, replyContainer, true);
 	}
 	
 	@PostConstruct
