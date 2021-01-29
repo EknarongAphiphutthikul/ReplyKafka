@@ -22,3 +22,6 @@ kafka-topics.sh --list  --zookeeper zoo1:2181
 -Dserver.port=9000 -Dspring.profiles.active=manaual -DSERVER_PORT=localhost:9093 -DCLIENT_ID=reply-kafka-req -DGROUPID_TOPIC_RESP=reply-kafka-req -DTOPIC_REQ=test-reply-topic-req -DTOPIC_RESP=test-reply-topic-resp
 ```
 > ReplyKafkaResp
+```
+-Dserver.port=9001  -DSERVER_PORT=localhost:9093 -DCLIENT_ID=reply-kafka-resp-1 -DGROUPID_TOPIC_REQ=reply-kafka-resp -DTOPIC_REQ=test-reply-topic-req -DTOPIC_RESP=test-reply-topic-resp
+```
