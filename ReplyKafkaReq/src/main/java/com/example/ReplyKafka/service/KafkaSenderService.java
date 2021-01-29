@@ -28,6 +28,7 @@ public class KafkaSenderService {
 			result = response.value();
 			System.out.println("Return value: " + result);
 		} catch (Throwable e) {
+			System.out.println("******************************************************************* FAIL TO SEND *************************************************************");
 			e.printStackTrace();
 		}
 		return result;

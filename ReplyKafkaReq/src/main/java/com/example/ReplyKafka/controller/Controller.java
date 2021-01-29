@@ -19,13 +19,13 @@ public class Controller {
 
 	@GetMapping("/senddata")
 	public @ResponseBody String sendData(@RequestParam String msg) throws Exception {
-		return kafkaSenderService.send(ReplyKafkaApplication.topicRequest, msg, 60000);
+		return kafkaSenderService.send(ReplyKafkaApplication.topicRequest, msg, 15000);
 	}
 
 	@GetMapping("/loadtest")
 	public @ResponseBody boolean testReplyKafka() throws Exception {
 		String req = generatingRandomStringBounded();
-		String response = kafkaSenderService.send(ReplyKafkaApplication.topicRequest, req, 60000);
+		String response = kafkaSenderService.send(ReplyKafkaApplication.topicRequest, req, 15000);
 		boolean value = req.equals(response);
 		if (!value) {
 			System.out.println("**********************FAIL*******************************");
