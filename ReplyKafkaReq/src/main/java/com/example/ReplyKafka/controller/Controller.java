@@ -26,7 +26,7 @@ public class Controller {
 	public @ResponseBody boolean testReplyKafka() throws Exception {
 		String req = generatingRandomStringBounded();
 		String response = kafkaSenderService.send(ReplyKafkaApplication.topicRequest, req, 15000);
-		boolean value = req.equals(response);
+		boolean value = req.toUpperCase().equals(response);
 		if (!value) {
 			System.out.println("**********************FAIL*******************************");
 		}
