@@ -1,5 +1,8 @@
 package com.example.ReplyKafka.consumer;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
@@ -8,7 +11,8 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Consumer {
+@Profile("auto")
+public class ConsumerAuto {
 
 	@KafkaListener(topics = "test-reply-topic-req")
 	public Message<?> listen(String in, @Header(KafkaHeaders.REPLY_TOPIC) byte[] replyTo,
@@ -20,5 +24,10 @@ public class Consumer {
 				.setHeader(KafkaHeaders.TOPIC, replyTo)
 				.setHeader(KafkaHeaders.CORRELATION_ID, correlation)
 				.build();
+	}
+	
+	@PostConstruct
+	public void print() {
+		System.out.println("Consumer By ConsumerAuto");
 	}
 }
