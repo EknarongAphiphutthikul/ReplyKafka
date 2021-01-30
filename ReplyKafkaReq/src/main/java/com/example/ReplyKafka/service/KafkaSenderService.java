@@ -23,7 +23,7 @@ public class KafkaSenderService {
 			ProducerRecord<String, String> record = new ProducerRecord<>(requestTopic, message);
 			RequestReplyFuture<String, String, String> future = replyKafkaTemplate.sendAndReceive(record, timeout);
 			SendResult<String, String> sendResult = future.getSendFuture().get();
-			System.out.println("Sent ok: " + sendResult.getRecordMetadata());
+			System.out.println("Sent ok value: " + message + ", metadata: " + sendResult.getRecordMetadata());
 			ConsumerRecord<String, String> response = future.get();
 			result = response.value();
 			System.out.println("Return value: " + result);
