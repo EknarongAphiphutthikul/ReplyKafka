@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import org.springframework.kafka.requestreply.RequestReplyFuture;
@@ -23,7 +24,8 @@ public class KafkaSenderService {
 			ProducerRecord<String, String> record = new ProducerRecord<>(requestTopic, message);
 			RequestReplyFuture<String, String, String> future = replyKafkaTemplate.sendAndReceive(record, timeout);
 			SendResult<String, String> sendResult = future.getSendFuture().get();
-			System.out.println("Sent ok value: " + message + ", metadata: " + sendResult.getRecordMetadata());
+			System.out.println("Sent ok value: " + message);
+			printMetaData(sendResult.getRecordMetadata(), sendResult.getProducerRecord());
 			ConsumerRecord<String, String> response = future.get();
 			result = response.value();
 			System.out.println("Return value: " + result);
@@ -32,6 +34,14 @@ public class KafkaSenderService {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	private void printMetaData(RecordMetadata metadata, ProducerRecord<String, String> record) {
+		System.out.println("MetaData : Offset=" + metadata.offset());
+		System.out.println("MetaData : Partition=" + metadata.partition());
+		System.out.println("MetaData : Topic=" + metadata.topic());
+		
+		System.out.println("ProducerRecord Header : =" + record.headers());
 	}
 	
 }
