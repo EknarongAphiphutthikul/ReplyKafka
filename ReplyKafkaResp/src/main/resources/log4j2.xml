@@ -3,7 +3,7 @@
 	<Properties>
 		<Property name="LOG_PATTERN_ROOT">%d{yyyy-MM-dd HH:mm:ss.SSS} %level  %m%n</Property>
 		<property name="LOG_PATH">${sys:logPath}</property>
-		<property name="LOG_NAME">ReplyKafkaReq-${sys:logName}</property>
+		<property name="LOG_NAME">ReplyKafkaResp-${sys:logName}</property>
 	</Properties>
 
 	<Appenders>
