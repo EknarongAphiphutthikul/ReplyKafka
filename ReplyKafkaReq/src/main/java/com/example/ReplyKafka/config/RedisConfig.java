@@ -8,9 +8,11 @@ import com.example.ReplyKafka.redis.JedisManager;
 @Configuration
 public class RedisConfig {
 
+	public static JedisManager jedisManager = null;
 	
 	@Bean
 	public JedisManager createJedisManager() throws Exception {
-		return new JedisManager(1);
+		RedisConfig.jedisManager = new JedisManager(1);
+		return RedisConfig.jedisManager;
 	}
 }

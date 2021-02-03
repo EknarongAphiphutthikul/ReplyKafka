@@ -66,13 +66,13 @@ public class KafkaSenderAsync {
 			    public void onFailure(KafkaProducerException ex) {
 			        ProducerRecord<String, String> failed = ex.getFailedProducerRecord();
 			        logger.info("Fail : " + failed.value());
-			        logger.error(ex);
+			        logger.error("KafkaProducerException : ", ex);
 			    }
 
 			});
 		} catch (Exception e) {
 			logger.info("******************************************************* Send Topic Resp Fail ************************************************************");
-			 logger.error(e);
+			 logger.error("sendToTopicResp Exception : ", e);
 		}
 	}
 }
