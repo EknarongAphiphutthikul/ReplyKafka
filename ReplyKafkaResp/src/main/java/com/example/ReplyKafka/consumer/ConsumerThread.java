@@ -2,6 +2,8 @@ package com.example.ReplyKafka.consumer;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Component;
 public class ConsumerThread {
 	
 
+	private static Logger logger = LogManager.getLogger(ConsumerThread.class);
 	@Autowired
 	private KafkaSenderAsync kafkaSenderAsync;
 
@@ -22,12 +25,12 @@ public class ConsumerThread {
 			@Header(KafkaHeaders.CORRELATION_ID) byte[] correlation,
 			@Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partitionId,
 			@Header(KafkaHeaders.OFFSET) int offset) {
-		System.out.println("Message=" + in + ", REPLY_TOPIC=" + new String(replyTo) + ", CORRELATION_ID=" + new String(correlation) + ", PartitionId=" + partitionId + ", offset=" + offset);
+		logger.info("Message=" + in + ", REPLY_TOPIC=" + new String(replyTo) + ", CORRELATION_ID=" + new String(correlation) + ", PartitionId=" + partitionId + ", offset=" + offset);
 		kafkaSenderAsync.sendToTopicResp(replyTo, correlation, in);
 	}
 	
 	@PostConstruct
 	public void print() {
-		System.out.println("Consumer By ConsumerThread");
+		logger.info("Consumer By ConsumerThread");
 	}
 }
