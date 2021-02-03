@@ -1,7 +1,10 @@
 package com.example.ReplyKafka.controller;
 
 import java.util.Random;
+import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,28 +12,37 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ReplyKafka.ReplyKafkaApplication;
+import com.example.ReplyKafka.model.Model;
 import com.example.ReplyKafka.service.KafkaSenderService;
 
 @RestController
 public class Controller {
 
+	private static Logger logger = LogManager.getLogger(Controller.class);
+	
 	@Autowired
 	private KafkaSenderService kafkaSenderService;
 
 	@GetMapping("/senddata")
 	public @ResponseBody String sendData(@RequestParam String msg) throws Exception {
-		return kafkaSenderService.send(ReplyKafkaApplication.topicRequest, msg, 15000);
+		return kafkaSenderService.send(ReplyKafkaApplication.topicRequest, Model.builder().msg(msg).key(generateKey()).build(), 15000);
 	}
 
 	@GetMapping("/loadtest")
 	public @ResponseBody boolean testReplyKafka() throws Exception {
 		String req = generatingRandomStringBounded();
-		String response = kafkaSenderService.send(ReplyKafkaApplication.topicRequest, req, 15000);
+		String response = kafkaSenderService.send(ReplyKafkaApplication.topicRequest, Model.builder().msg(req).key(generateKey()).build(), 15000);
 		boolean value = req.toUpperCase().equals(response);
 		if (!value) {
-			System.out.println("**********************FAIL*******************************");
+			logger.info("**********************FAIL*******************************");
 		}
 		return value;
+	}
+	
+	private String generateKey() {
+		String key = "key:" + UUID.randomUUID();
+		logger.info("Generate Key : " + key);
+		return key;
 	}
 
 	private String generatingRandomStringBounded() {
@@ -44,6 +56,7 @@ public class Controller {
 			int randomLimitedInt = leftLimit + (int) (random.nextFloat() * (rightLimit - leftLimit + 1));
 			buffer.append((char) randomLimitedInt);
 		}
+		buffer.append(UUID.randomUUID());
 		return buffer.toString();
 	}
 }

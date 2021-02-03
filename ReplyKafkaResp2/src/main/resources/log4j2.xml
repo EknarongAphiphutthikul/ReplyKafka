@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="60">
+	<Properties>
+		<Property name="LOG_PATTERN_ROOT">%d{yyyy-MM-dd HH:mm:ss.SSS} %level  %m%n</Property>
+		<property name="LOG_PATH">${sys:logPath}</property>
+		<property name="LOG_NAME">ReplyKafkaResp2-${sys:logName}</property>
+	</Properties>
+
+	<Appenders>
+		<Console name="ConsoleAppenderRoot" target="SYSTEM_OUT">
+			<PatternLayout pattern="${LOG_PATTERN_ROOT}" />
+		</Console>
+		
+		<RollingFile name="LogDebug-Root-FILE"
+			fileName="${LOG_PATH}/${LOG_NAME}.log"
+			filePattern="${LOG_PATH}/${LOG_NAME}-%d{yyyy-MM-dd-HH}.log.gz"
+			ignoreExceptions="false">
+			<PatternLayout pattern="${LOG_PATTERN_ROOT}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"	modulate="true" />
+			</Policies>
+			<DefaultRolloverStrategy compressionLevel="9"/>
+		</RollingFile>
+
+		<Async name="Async">
+			<AppenderRef ref="LogDebug-Root-FILE" />
+		</Async>
+	</Appenders>
+
+	<Loggers>
+	    <Root level="info" >
+	    	<AppenderRef ref="ConsoleAppenderRoot" />
+			<AppenderRef ref="LogDebug-Root-FILE" />
+	    </Root>
+	</Loggers>
+</Configuration>

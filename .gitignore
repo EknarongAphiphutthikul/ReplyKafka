@@ -1,0 +1,10 @@
+ReplyKafkaResp2/mvnw
+ReplyKafkaResp2/mvnw.cmd
+ReplyKafkaResp2/.mvn/*
+logs/*
+ReplyKafkaResp/mvnw
+ReplyKafkaResp/mvnw.cmd
+ReplyKafkaResp/.mvn/*
+ReplyKafkaReq/mvnw
+ReplyKafkaReq/mvnw.cmd
+ReplyKafkaReq/.mvn/*

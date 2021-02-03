@@ -1,0 +1,37 @@
+********  ReplyKafkaReq   ********
+-Dserver.port=9000 -Dspring.profiles.active=manaual -DSERVER_PORT=localhost:9092 -DCLIENT_ID=reply-kafka-req-1 -DGROUPID_TOPIC_RESP=reply-kafka-req -DTOPIC_REQ=test-reply-topic-req -DTOPIC_RESP=test-reply-topic-resp-2
+-DlogName=reply-kafka-req-1
+-DlogPath=D:\My_Work\Git\ReplyKafka\logs\
+
+-Dserver.port=9001 -Dspring.profiles.active=manaual -DSERVER_PORT=localhost:9092 -DCLIENT_ID=reply-kafka-req-2 -DGROUPID_TOPIC_RESP=reply-kafka-req -DTOPIC_REQ=test-reply-topic-req -DTOPIC_RESP=test-reply-topic-resp-2
+-DlogName=reply-kafka-req-2
+-DlogPath=D:\My_Work\Git\ReplyKafka\logs\
+
+-Dserver.port=9002 -Dspring.profiles.active=manaual -DSERVER_PORT=localhost:9092 -DCLIENT_ID=reply-kafka-req-3 -DGROUPID_TOPIC_RESP=reply-kafka-req -DTOPIC_REQ=test-reply-topic-req -DTOPIC_RESP=test-reply-topic-resp-2
+-DlogName=reply-kafka-req-3
+-DlogPath=D:\My_Work\Git\ReplyKafka\logs\
+
+-Dserver.port=9003 -Dspring.profiles.active=manaual -DSERVER_PORT=localhost:9092 -DCLIENT_ID=reply-kafka-req-4 -DGROUPID_TOPIC_RESP=reply-kafka-req -DTOPIC_REQ=test-reply-topic-req -DTOPIC_RESP=test-reply-topic-resp-2
+-DlogName=reply-kafka-req-4
+-DlogPath=D:\My_Work\Git\ReplyKafka\logs\
+
+
+********  ReplyKafkaResp   ********
+-Dserver.port=9004 -Dspring.profiles.active=thread -DSERVER_PORT=localhost:9092 -DCLIENT_ID=reply-kafka-resp-1 -DGROUPID_TOPIC_REQ=reply-kafka-resp -DTOPIC_REQ=test-reply-topic-req -DTOPIC_RESP=test-reply-topic-resp
+-DlogName=reply-kafka-resp-1
+-DlogPath=D:\My_Work\Git\ReplyKafka\logs\
+
+-Dserver.port=9005 -Dspring.profiles.active=thread  -DSERVER_PORT=localhost:9092 -DCLIENT_ID=reply-kafka-resp-2 -DGROUPID_TOPIC_REQ=reply-kafka-resp -DTOPIC_REQ=test-reply-topic-req -DTOPIC_RESP=test-reply-topic-resp
+-DlogName=reply-kafka-resp-2
+-DlogPath=D:\My_Work\Git\ReplyKafka\logs\
+
+
+
+********  ReplyKafkaResp2   ********
+-Dserver.port=9006 -Dspring.profiles.active=thread -DSERVER_PORT=localhost:9092 -DCLIENT_ID=reply-kafka-resp2-1 -DGROUPID_TOPIC_REQ=reply-kafka-resp2 -DTOPIC_REQ=test-reply-topic-resp -DTOPIC_RESP=test-reply-topic-resp-2
+-DlogName=reply-kafka-resp2-1
+-DlogPath=D:\My_Work\Git\ReplyKafka\logs\
+
+-Dserver.port=9007 -Dspring.profiles.active=thread -DSERVER_PORT=localhost:9092 -DCLIENT_ID=reply-kafka-resp2-2 -DGROUPID_TOPIC_REQ=reply-kafka-resp2 -DTOPIC_REQ=test-reply-topic-resp -DTOPIC_RESP=test-reply-topic-resp-2
+-DlogName=reply-kafka-resp2-2
+-DlogPath=D:\My_Work\Git\ReplyKafka\logs\

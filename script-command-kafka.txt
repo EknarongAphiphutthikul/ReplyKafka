@@ -3,7 +3,7 @@ kafka-server-start.bat ../../config/server.properties
 
 kafka-topics.bat --create --topic test-reply-topic-req --partitions 3 --replication-factor 1 --config delete.retention.ms=86400000 --bootstrap-server localhost:9092
 kafka-topics.bat --create --topic test-reply-topic-resp --partitions 3 --replication-factor 1 --config delete.retention.ms=86400000 --bootstrap-server localhost:9092
-kafka-topics.bat --create --topic temp --partitions 1 --replication-factor 1 --config delete.retention.ms=86400000 --bootstrap-server localhost:9092
+kafka-topics.bat --create --topic test-reply-topic-resp-2 --partitions 3 --replication-factor 1 --config delete.retention.ms=86400000 --bootstrap-server localhost:9092
 
 kafka-topics.bat --list  --bootstrap-server localhost:9092
 
