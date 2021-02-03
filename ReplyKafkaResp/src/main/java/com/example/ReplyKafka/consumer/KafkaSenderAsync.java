@@ -62,4 +62,39 @@ public class KafkaSenderAsync {
 			logger.error("sendToTopicResp Exception : ", e);
 		}
 	}
+	
+	@Async("threadPoolTaskExecutor")
+	public void sendToTopicReq(byte[] topicResp, byte[] correlationId, String msg) {
+		try {	
+			Model model = gson.fromJson(msg, Model.class);
+			model.setMsg(model.getMsg().toUpperCase());
+		    Message<String> message = MessageBuilder
+	                .withPayload(gson.toJson(model))
+	                .setHeader(KafkaHeaders.TOPIC, ReplyKafkaApplication.topicRequest)
+	                .setHeader(KafkaHeaders.REPLY_TOPIC, topicResp)
+	                .setHeader(KafkaHeaders.CORRELATION_ID, correlationId)
+	                .build();
+
+			ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(message);
+			future.addCallback(new KafkaSendCallback<String, String>() {
+
+			    @Override
+			    public void onSuccess(SendResult<String, String> result) {
+			    	ProducerRecord<String, String> success = result.getProducerRecord();
+			    	logger.info("Success : " + success.value());
+			    }
+
+			    @Override
+			    public void onFailure(KafkaProducerException ex) {
+			        ProducerRecord<String, String> failed = ex.getFailedProducerRecord();
+			        logger.info("Fail : " + failed.value());
+			       logger.error("KafkaProducerException Exception : ", ex);
+			    }
+
+			});
+		} catch (Exception e) {
+			logger.info("******************************************************* Send Topic Resp Fail ************************************************************");
+			logger.error("sendToTopicResp Exception : ", e);
+		}
+	}
 }
