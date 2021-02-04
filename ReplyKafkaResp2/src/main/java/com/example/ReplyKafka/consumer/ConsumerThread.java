@@ -11,6 +11,8 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
+import com.example.protobuf.Model;
+
 @Component
 @Profile("thread")
 public class ConsumerThread {
@@ -21,11 +23,11 @@ public class ConsumerThread {
 	private static Logger logger = LogManager.getLogger(ConsumerThread.class);
 
 	@KafkaListener(topics = "test-reply-topic-resp")
-	public void listen(String in, 
+	public void listen(Model model, 
 			@Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partitionId,
 			@Header(KafkaHeaders.OFFSET) int offset) {
-		logger.info("Message=" + in + ", PartitionId=" + partitionId + ", offset=" + offset);
-		kafkaSenderAsync.sendToTopicResp(in);
+		logger.info("Message=" + model + ", PartitionId=" + partitionId + ", offset=" + offset);
+		kafkaSenderAsync.sendToTopicResp(model);
 	}
 	
 	@PostConstruct

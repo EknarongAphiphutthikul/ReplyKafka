@@ -20,50 +20,45 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import com.example.ReplyKafka.ReplyKafkaApplication;
-import com.example.ReplyKafka.model.Model;
-import com.google.gson.Gson;
+import com.example.protobuf.Model;
 
 @Component
 @Profile("manaual")
 public class ConsumerManaual {
 	
 	@Autowired
-	private KafkaTemplate<String, String> kafkaTemplate;
+	private KafkaTemplate<String, Model> kafkaTemplate;
 	
 	private static Logger logger = LogManager.getLogger(ConsumerManaual.class);
-	private Gson gson = new Gson();
 
 	@KafkaListener(topics = "test-reply-topic-req")
-	public void listen(String in, @Header(KafkaHeaders.REPLY_TOPIC) byte[] replyTo,
+	public void listen(Model model, @Header(KafkaHeaders.REPLY_TOPIC) byte[] replyTo,
 			@Header(KafkaHeaders.CORRELATION_ID) byte[] correlation,
 			@Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partitionId,
 			@Header(KafkaHeaders.OFFSET) int offset) {
-		logger.info("Message=" + in + ", REPLY_TOPIC=" + new String(replyTo) + ", CORRELATION_ID=" + new String(correlation) + ", PartitionId=" + partitionId + ", offset=" + offset);
-		sendToTopicResp(replyTo, correlation, in);
+		logger.info("Message=" + model + ", REPLY_TOPIC=" + new String(replyTo) + ", CORRELATION_ID=" + new String(correlation) + ", PartitionId=" + partitionId + ", offset=" + offset);
+		sendToTopicResp(replyTo, correlation, model);
 	}
 	
-	private void sendToTopicResp(byte[] topicResp, byte[] correlationId, String msg) {
+	private void sendToTopicResp(byte[] topicResp, byte[] correlationId, Model msg) {
 		try {		  
-			Model model = gson.fromJson(msg, Model.class);
-			model.setMsg(model.getMsg().toUpperCase());
-		    Message<String> message = MessageBuilder
-	                .withPayload(gson.toJson(model))
+		    Message<Model> message = MessageBuilder
+	                .withPayload(Model.newBuilder().setKey(msg.getKey()).setMsg(msg.getMsg().toUpperCase()).build())
 	                .setHeader(KafkaHeaders.TOPIC, ReplyKafkaApplication.topicResponse)
-//	                .setHeader(KafkaHeaders.CORRELATION_ID, correlationId)
 	                .build();
 
-			ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(message);
-			future.addCallback(new KafkaSendCallback<String, String>() {
+			ListenableFuture<SendResult<String, Model>> future = kafkaTemplate.send(message);
+			future.addCallback(new KafkaSendCallback<String, Model>() {
 
 			    @Override
-			    public void onSuccess(SendResult<String, String> result) {
-			    	ProducerRecord<String, String> success = result.getProducerRecord();
+			    public void onSuccess(SendResult<String, Model> result) {
+			    	ProducerRecord<String, Model> success = result.getProducerRecord();
 			    	logger.info("Success : " + success.value());
 			    }
 
 			    @Override
 			    public void onFailure(KafkaProducerException ex) {
-			        ProducerRecord<String, String> failed = ex.getFailedProducerRecord();
+			        ProducerRecord<String, Model> failed = ex.getFailedProducerRecord();
 			        logger.info("Fail : " + failed.value());
 			        logger.error("KafkaProducerException : ", ex);
 			    }

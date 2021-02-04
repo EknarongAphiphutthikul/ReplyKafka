@@ -13,27 +13,22 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import com.example.ReplyKafka.ReplyKafkaApplication;
-import com.example.ReplyKafka.model.Model;
-import com.google.gson.Gson;
+import com.example.protobuf.Model;
 
 @Component
 @Profile("auto")
 public class ConsumerAuto {
 	
 	private static Logger logger = LogManager.getLogger(ConsumerAuto.class);
-	private Gson gson = new Gson();
 
 	@KafkaListener(topics = "test-reply-topic-req")
-	public Message<?> listen(String in, @Header(KafkaHeaders.REPLY_TOPIC) byte[] replyTo,
+	public Message<?> listen(Model model, @Header(KafkaHeaders.REPLY_TOPIC) byte[] replyTo,
 			@Header(KafkaHeaders.CORRELATION_ID) byte[] correlation,
 			@Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partitionId,
 			@Header(KafkaHeaders.OFFSET) int offset) {
-		logger.info("Message=" + in + ", REPLY_TOPIC=" + new String(replyTo) + ", CORRELATION_ID=" + new String(correlation) + ", PartitionId=" + partitionId + ", offset=" + offset);
-		Model model = gson.fromJson(in, Model.class);
-		model.setMsg(model.getMsg().toUpperCase());
-		return MessageBuilder.withPayload(gson.toJson(model))
+		logger.info("Message=" + model + ", REPLY_TOPIC=" + new String(replyTo) + ", CORRELATION_ID=" + new String(correlation) + ", PartitionId=" + partitionId + ", offset=" + offset);
+		return MessageBuilder.withPayload(Model.newBuilder().setKey(model.getKey()).setMsg(model.getMsg().toUpperCase()).build())
 				.setHeader(KafkaHeaders.TOPIC, ReplyKafkaApplication.topicResponse)
-//				.setHeader(KafkaHeaders.CORRELATION_ID, correlation)
 				.build();
 	}
 	

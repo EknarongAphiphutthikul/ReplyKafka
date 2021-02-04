@@ -13,6 +13,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
 import com.example.ReplyKafka.ReplyKafkaApplication;
+import com.example.protobuf.Model;
 
 @EnableAutoConfiguration
 @EnableKafka
@@ -21,22 +22,22 @@ import com.example.ReplyKafka.ReplyKafkaApplication;
 public class MyConfigurationManaualConfig extends KafkaConfigUtils {
 
 	@Bean
-	public ConsumerFactory<String, String> initConsumerFactory() throws Exception {
+	public ConsumerFactory<String, Model> initConsumerFactory() throws Exception {
 		return consumerFactory(ReplyKafkaApplication.serverPostKafka, ReplyKafkaApplication.groupIdTopicReq, ReplyKafkaApplication.clientId, 5, false, true);
 	}
 
 	@Bean("kafkaListenerContainerFactory")
-	public ConcurrentKafkaListenerContainerFactory<String, String> initkafkaListenerContainerFactory(ConsumerFactory<String, String> consumerFactory) throws Exception {
+	public ConcurrentKafkaListenerContainerFactory<String, Model> initkafkaListenerContainerFactory(ConsumerFactory<String, Model> consumerFactory) throws Exception {
 		return kafkaListenerContainerFactory(consumerFactory, 1);
 	}
 
 	@Bean
-	public ProducerFactory<String, String> initProducerFactory() throws Exception {
+	public ProducerFactory<String, Model> initProducerFactory() throws Exception {
 		return producerFactory(ReplyKafkaApplication.serverPostKafka, ReplyKafkaApplication.clientId);
 	}
 
 	@Bean
-	public KafkaTemplate<String, String> initReplyingTemplate(ProducerFactory<String, String> producerFactory) throws Exception {
+	public KafkaTemplate<String, Model> initReplyingTemplate(ProducerFactory<String, Model> producerFactory) throws Exception {
 		return kafkaTemplate(producerFactory);
 	}
 

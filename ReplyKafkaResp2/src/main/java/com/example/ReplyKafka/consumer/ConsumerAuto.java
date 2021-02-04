@@ -15,25 +15,22 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import com.example.ReplyKafka.ReplyKafkaApplication;
-import com.example.ReplyKafka.model.Model;
 import com.example.ReplyKafka.redis.JedisManager;
-import com.google.gson.Gson;
+import com.example.protobuf.Model;
 
 @Component
 @Profile("auto")
 public class ConsumerAuto {
 	
-	private Gson gson = new Gson();
 	@Autowired
 	private JedisManager jedisManager;
 	private static Logger logger = LogManager.getLogger(ConsumerAuto.class);
 
 	@KafkaListener(topics = "test-reply-topic-resp")
-	public Message<?> listen(String in,
+	public Message<?> listen(Model model,
 			@Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partitionId,
 			@Header(KafkaHeaders.OFFSET) int offset) {
-		logger.info("Message=" + in + ", PartitionId=" + partitionId + ", offset=" + offset);
-		Model model = gson.fromJson(in, Model.class);
+		logger.info("Message=" + model + ", PartitionId=" + partitionId + ", offset=" + offset);
 		byte[] correlation = null;
 		try {
 			String valueStr = jedisManager.getValue(model.getKey());
@@ -42,7 +39,7 @@ public class ConsumerAuto {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return MessageBuilder.withPayload(in)
+		return MessageBuilder.withPayload(model)
 				.setHeader(KafkaHeaders.TOPIC, ReplyKafkaApplication.topicResponse)
 				.setHeader(KafkaHeaders.CORRELATION_ID, correlation)
 				.build();

@@ -13,6 +13,8 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
+import com.example.protobuf.Model;
+
 @Component
 @Profile("thread")
 public class ConsumerThread {
@@ -24,7 +26,7 @@ public class ConsumerThread {
 	private Random random = new Random();
 
 	@KafkaListener(topics = "test-reply-topic-req")
-	public void listen(String in, @Header(KafkaHeaders.REPLY_TOPIC) byte[] replyTo,
+	public void listen(Model in, @Header(KafkaHeaders.REPLY_TOPIC) byte[] replyTo,
 			@Header(KafkaHeaders.CORRELATION_ID) byte[] correlation,
 			@Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partitionId,
 			@Header(KafkaHeaders.OFFSET) int offset) {
