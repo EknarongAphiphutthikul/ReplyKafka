@@ -13,39 +13,36 @@ import org.springframework.kafka.requestreply.RequestReplyFuture;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
-import com.example.ReplyKafka.model.Model;
-import com.google.gson.Gson;
+import com.example.protobuf.Model;
 
 @Service
 public class KafkaSenderService {
 	
 	private static Logger logger = LogManager.getLogger(KafkaSenderService.class);
 	
-	private Gson gson = new Gson();
 	@Autowired
-	private ReplyingKafkaTemplate<String, String, String> replyKafkaTemplate;
+	private ReplyingKafkaTemplate<String, Model, Model> replyKafkaTemplate;
 
-	public String send(String requestTopic, Model model, long timeoutMillis) throws Exception {
-		String result = null;
+	public String send(String requestTopic, Model.Builder model, long timeoutMillis) throws Exception {
+		Model result = null;
 		try {
-			String message = gson.toJson(model);
 			Duration timeout = Duration.ofMillis(timeoutMillis);
-			ProducerRecord<String, String> record = new ProducerRecord<>(requestTopic, message);
-			RequestReplyFuture<String, String, String> future = replyKafkaTemplate.sendAndReceive(record, timeout);
-			SendResult<String, String> sendResult = future.getSendFuture().get();
+			ProducerRecord<String, Model> record = new ProducerRecord<>(requestTopic, model.build());
+			RequestReplyFuture<String, Model, Model> future = replyKafkaTemplate.sendAndReceive(record, timeout);
+			SendResult<String, Model> sendResult = future.getSendFuture().get();
 			logger.info("Sent ok value: " + model.getMsg());
-//			printMetaData(sendResult.getRecordMetadata(), sendResult.getProducerRecord());
-			ConsumerRecord<String, String> response = future.get();
-			result = gson.fromJson(response.value(), Model.class).getMsg();
+			printMetaData(sendResult.getRecordMetadata(), sendResult.getProducerRecord());
+			ConsumerRecord<String, Model> response = future.get();
+			result = response.value();
 			logger.info("Return value: " + result);
 		} catch (Throwable e) {
 			logger.info("******************************************************************* FAIL TO SEND *************************************************************");
 			logger.error("Send Exception : ", e);
 		}
-		return result;
+		return result.getMsg();
 	}
 	
-	private void printMetaData(RecordMetadata metadata, ProducerRecord<String, String> record) {
+	private void printMetaData(RecordMetadata metadata, ProducerRecord<String, Model> record) {
 		logger.info("MetaData : Offset=" + metadata.offset());
 		logger.info("MetaData : Partition=" + metadata.partition());
 		logger.info("MetaData : Topic=" + metadata.topic());

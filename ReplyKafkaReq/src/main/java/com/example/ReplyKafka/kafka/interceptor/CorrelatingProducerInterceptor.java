@@ -13,22 +13,20 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.kafka.support.KafkaHeaders;
 
 import com.example.ReplyKafka.config.RedisConfig;
-import com.example.ReplyKafka.model.Model;
-import com.google.gson.Gson;
+import com.example.protobuf.Model;
 
-public class CorrelatingProducerInterceptor implements ProducerInterceptor<String, String> {
+public class CorrelatingProducerInterceptor implements ProducerInterceptor<String, Model> {
 	
 	private static Logger logger = LogManager.getLogger(CorrelatingProducerInterceptor.class);
-	private Gson gson = new Gson();
 
 	@Override
 	public void configure(Map<String, ?> configs) {
 	}
 
 	@Override
-	public ProducerRecord<String, String> onSend(ProducerRecord<String, String> record) {
+	public ProducerRecord<String, Model> onSend(ProducerRecord<String, Model> record) {
 		Header correlation = record.headers().lastHeader(KafkaHeaders.CORRELATION_ID);
-		Model model = gson.fromJson(record.value(), Model.class);
+		Model model = record.value();
 		try {
 			setToRedis(model.getKey(), correlation.value());
 		} catch (Exception e) {

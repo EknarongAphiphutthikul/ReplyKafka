@@ -1,0 +1,1 @@
+C:\Program_Me\protobuf\bin\protoc --proto_path=. --java_out=./src/main/java/ Model.proto

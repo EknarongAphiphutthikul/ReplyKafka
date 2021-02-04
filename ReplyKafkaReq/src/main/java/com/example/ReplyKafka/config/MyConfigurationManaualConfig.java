@@ -16,19 +16,25 @@ import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 
 import com.example.ReplyKafka.ReplyKafkaApplication;
 import com.example.ReplyKafka.kafka.interceptor.CorrelatingProducerInterceptor;
+import com.example.protobuf.Model;
 
 @Configuration
 @Profile("manaual")
 public class MyConfigurationManaualConfig extends KafkaConfigUtils {
 
 	@Bean
-	public ReplyingKafkaTemplate<String, String, String> initReplyKafkaTemplate() throws Exception {
+	public ReplyingKafkaTemplate<String, Model, Model> initReplyKafkaTemplate() throws Exception {
 		Map<String, Object> producerConfig =  producerConfig(ReplyKafkaApplication.serverPostKafka, ReplyKafkaApplication.clientId);
 		producerConfig.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, CorrelatingProducerInterceptor.class.getName());
-		ProducerFactory<String, String> producerFactory = producerFactory(producerConfig);
-		ConsumerFactory<String, String> consumerFactory = consumerFactory(ReplyKafkaApplication.serverPostKafka, ReplyKafkaApplication.groupIdTopicResp, ReplyKafkaApplication.clientId, 5, false, true);
-		ConcurrentKafkaListenerContainerFactory<String, String> factory = kafkaListenerContainerFactory(consumerFactory, 1);
-		ConcurrentMessageListenerContainer<String, String> replyContainer = concurrentMessageListenerContainer(factory, ReplyKafkaApplication.topicResponse, ReplyKafkaApplication.groupIdTopicResp);
+		ProducerFactory<String, Model> producerFactory = producerFactory(producerConfig);
+		
+		
+		Map<String, Object> consumerConfig = consumerConfig(ReplyKafkaApplication.serverPostKafka, ReplyKafkaApplication.groupIdTopicResp, ReplyKafkaApplication.clientId, 5, false, true);
+		ConsumerFactory<String, Model> consumerFactory = consumerFactory(consumerConfig);
+		
+		
+		ConcurrentKafkaListenerContainerFactory<String, Model> factory = kafkaListenerContainerFactory(consumerFactory, 1);
+		ConcurrentMessageListenerContainer<String, Model> replyContainer = concurrentMessageListenerContainer(factory, ReplyKafkaApplication.topicResponse, ReplyKafkaApplication.groupIdTopicResp);
 		return replyKafkaTemplateForManaulConfig(producerFactory, replyContainer, true);
 	}
 	

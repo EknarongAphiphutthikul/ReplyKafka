@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ReplyKafka.ReplyKafkaApplication;
-import com.example.ReplyKafka.model.Model;
 import com.example.ReplyKafka.service.KafkaSenderService;
+import com.example.protobuf.Model;
 
 @RestController
 public class Controller {
@@ -25,13 +25,13 @@ public class Controller {
 
 	@GetMapping("/senddata")
 	public @ResponseBody String sendData(@RequestParam String msg) throws Exception {
-		return kafkaSenderService.send(ReplyKafkaApplication.topicRequest, Model.builder().msg(msg).key(generateKey()).build(), 15000);
+		return kafkaSenderService.send(ReplyKafkaApplication.topicRequest, Model.newBuilder().setMsg(msg).setKey(generateKey()), 15000);
 	}
 
 	@GetMapping("/loadtest")
 	public @ResponseBody boolean testReplyKafka() throws Exception {
 		String req = generatingRandomStringBounded();
-		String response = kafkaSenderService.send(ReplyKafkaApplication.topicRequest, Model.builder().msg(req).key(generateKey()).build(), 15000);
+		String response = kafkaSenderService.send(ReplyKafkaApplication.topicRequest, Model.newBuilder().setMsg(req).setKey(generateKey()), 15000);
 		boolean value = req.toUpperCase().equals(response);
 		if (!value) {
 			logger.info("**********************FAIL*******************************");

@@ -11,18 +11,19 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 
 import com.example.ReplyKafka.ReplyKafkaApplication;
+import com.example.protobuf.Model;
 
 @Configuration
 @Profile("auto")
 public class MyConfigurationAutoConfig extends KafkaConfigUtils {
 	
 	@Bean
-	public ConcurrentMessageListenerContainer<String, String> initReplyContainer(ConcurrentKafkaListenerContainerFactory<String, String> factory) throws Exception {
+	public ConcurrentMessageListenerContainer<String, Model> initReplyContainer(ConcurrentKafkaListenerContainerFactory<String, Model> factory) throws Exception {
 		return concurrentMessageListenerContainer(factory, ReplyKafkaApplication.topicResponse, ReplyKafkaApplication.groupIdTopicResp);
 	}
 
 	@Bean
-	public ReplyingKafkaTemplate<String, String, String> initReplyKafkaTemplate(ProducerFactory<String, String> producerFactory, ConcurrentMessageListenerContainer<String, String> replyContainer) throws Exception {
+	public ReplyingKafkaTemplate<String, Model, Model> initReplyKafkaTemplate(ProducerFactory<String, Model> producerFactory, ConcurrentMessageListenerContainer<String, Model> replyContainer) throws Exception {
 		return replyKafkaTemplateForAutoConfig(producerFactory, replyContainer);
 	}
 
